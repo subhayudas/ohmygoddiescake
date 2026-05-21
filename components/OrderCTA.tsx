@@ -289,11 +289,24 @@ export function OrderForm() {
   const [deliveryAddressDraft, setDeliveryAddressDraft] = useState('')
   const [maxReachedStep, setMaxReachedStep] = useState(1)
   const resumeAfterEditingFromStepRef = useRef<number | null>(null)
+  const successRef = useRef<HTMLDivElement>(null)
 
   const [calendarView, setCalendarView] = useState(() => {
     const n = new Date()
     return { year: n.getFullYear(), month: n.getMonth() }
   })
+
+  useEffect(() => {
+    if (!submitted) return
+    const el = successRef.current
+    if (!el) return
+    const scrollToSuccess = () => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+    }
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scrollToSuccess)
+    })
+  }, [submitted])
 
   useEffect(() => {
     setMaxReachedStep(m => Math.max(m, step))
@@ -517,6 +530,21 @@ export function OrderForm() {
     setWizard(w => ({ ...w, submitted: true }))
   }
 
+  const handleOrderNewCake = () => {
+    setWizard({
+      form: { ...INITIAL_FORM },
+      nav: { ...INITIAL_NAV },
+      submitted: false,
+    })
+    setMaxReachedStep(1)
+    resumeAfterEditingFromStepRef.current = null
+    setOtherCelebrationModalOpen(false)
+    setDeliveryAddressModalOpen(false)
+    requestAnimationFrame(() => {
+      document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+
   const canDietaryNext = (): boolean =>
     dietaryRestrictions.length > 0
 
@@ -704,24 +732,34 @@ export function OrderForm() {
         </motion.div>
 
         {submitted ? (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass-border warm-card rounded-3xl p-8 md:p-10 text-center"
-          >
-            <p className="font-serif text-xl md:text-2xl text-charcoal leading-relaxed mb-4">
-              Your order request has been received!
-            </p>
-            {dietaryRestrictions.length > 0 && (
-              <p className="text-charcoal/60 text-sm mb-4 max-w-md mx-auto">
-                Dietary: {dietaryRestrictions.join(', ')}
+          <div className="min-h-[min(70vh,640px)] flex items-center justify-center py-6">
+            <motion.div
+              ref={successRef}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass-border warm-card rounded-3xl p-8 md:p-10 text-center w-full"
+            >
+              <p className="font-serif text-xl md:text-2xl text-charcoal leading-relaxed mb-4">
+                Your order request has been received!
               </p>
-            )}
-            <p className="text-charcoal/70 text-sm leading-relaxed max-w-md mx-auto">
-              Onyinye will be in touch within 24 hours with your quote. A 50% deposit via e-transfer will be required
-              to confirm your order.
-            </p>
-          </motion.div>
+              {dietaryRestrictions.length > 0 && (
+                <p className="text-charcoal/60 text-sm mb-4 max-w-md mx-auto">
+                  Dietary: {dietaryRestrictions.join(', ')}
+                </p>
+              )}
+              <p className="text-charcoal/70 text-sm leading-relaxed max-w-md mx-auto">
+                Onyinye will be in touch within 24 hours with your quote. A 50% deposit via e-transfer will be required
+                to confirm your order.
+              </p>
+              <button
+                type="button"
+                onClick={handleOrderNewCake}
+                className="mt-8 btn-glow btn-amber-glow bg-rose-gold text-white text-sm font-semibold px-10 py-4 rounded-full hover:bg-opacity-90 transition-all duration-500 ease-in-out"
+              >
+                Order a New Cake
+              </button>
+            </motion.div>
+          </div>
         ) : (
           <form
             onSubmit={e => {
@@ -768,12 +806,13 @@ export function OrderForm() {
               </p>
             </div>
 
-            <div className="glass-border warm-card rounded-3xl p-6 md:p-8 min-h-[320px] flex flex-col" style={{ boxShadow: '0 0 60px rgba(245,158,66,0.12), 0 8px 40px rgba(0,0,0,0.07), inset 0 2px 0 rgba(255,255,255,0.95)' }}>
+            <div className="glass-border warm-card rounded-3xl p-6 md:p-8 min-h-[320px] flex flex-col overflow-visible" style={{ boxShadow: '0 0 60px rgba(245,158,66,0.12), 0 8px 40px rgba(0,0,0,0.07), inset 0 2px 0 rgba(255,255,255,0.95)' }}>
               <div
-                className="mb-4 flex h-10 shrink-0 flex-nowrap items-center gap-1.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="mb-4 shrink-0 overflow-visible px-1 pt-1 pb-1.5"
                 role="tablist"
                 aria-label="Form steps"
               >
+                <div className="flex min-h-10 flex-nowrap items-center gap-1.5 overflow-x-auto py-1 px-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {MAIN_STEP_TABS.map(({ step: tabStep, label }) => {
                   const locked = tabStep > maxReachedStep
                   const active = tabStep === step
@@ -814,6 +853,7 @@ export function OrderForm() {
                     </button>
                   )
                 })}
+                </div>
               </div>
               <div className="flex min-h-0 flex-1 flex-col">
               <AnimatePresence mode="wait">

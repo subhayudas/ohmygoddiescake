@@ -2,14 +2,12 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Cake, Crown, Utensils, Briefcase } from 'lucide-react'
+import { Cake, Crown, Utensils } from 'lucide-react'
 import Image from 'next/image'
 
-const services = [
-  { icon: Cake, name: 'Custom Celebration Cakes', desc: 'Birthdays, anniversaries, graduations — fully custom', img: '/Celebration Birthday.png' },
-  { icon: Crown, name: 'Wedding Cakes', desc: 'Tiered masterpieces for your most important day', img: '/Celebration Wedding.png' },
-  { icon: Utensils, name: 'Dessert Tables', desc: 'Curated sweet spreads for events', img: '/18FB0FAB-46E3-49BE-B543-73CF7120E76F.png' },
-  { icon: Briefcase, name: 'Corporate Orders', desc: 'Branded cakes and treats for business events', img: '/Celebration Corporate.png' },
+const featuredServices = [
+  { icon: Utensils, label: 'Dessert Tables', img: '/18FB0FAB-46E3-49BE-B543-73CF7120E76F.png' },
+  { icon: Cake, label: 'Custom Celebration Cakes', img: '/Celebration Birthday.png' },
 ]
 
 const marqueeItems = [
@@ -27,6 +25,9 @@ export default function Services() {
   })
   const img1Y = useTransform(scrollYProgress, [0, 1], ['0%', '-8%'])
   const img2Y = useTransform(scrollYProgress, [0, 1], ['0%', '-4%'])
+  const img3Y = useTransform(scrollYProgress, [0, 1], ['0%', '-6%'])
+  const img4Y = useTransform(scrollYProgress, [0, 1], ['0%', '-3%'])
+  const parallaxOffsets = [img1Y, img2Y, img3Y, img4Y]
 
   return (
     <section ref={sectionRef} id="services" className="section-padding section-ambient bg-amber-light overflow-hidden">
@@ -55,7 +56,7 @@ export default function Services() {
         </motion.div>
 
         {/* Bento grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Left column: 2 stacked feature images with parallax */}
           <motion.div
@@ -63,7 +64,7 @@ export default function Services() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="lg:col-span-1 flex flex-col gap-4"
+            className="flex flex-col gap-4"
           >
             {/* Feature image 1 — parallax */}
             <motion.div
@@ -110,45 +111,46 @@ export default function Services() {
             </motion.div>
           </motion.div>
 
-          {/* Right area: 4 service tiles in 2×2 grid */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-3 content-start">
-            {services.map((s, i) => {
+          {/* Right column: 2 stacked feature images (same design as left) */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="flex flex-col gap-4"
+          >
+            {featuredServices.map((s, i) => {
               const Icon = s.icon
+              const y = parallaxOffsets[i + 2]
               return (
                 <motion.div
-                  key={s.name}
-                  initial={{ opacity: 0, y: 20, scale: 0.97 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  whileHover={{ y: -6, scale: 1.02, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+                  key={s.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06, ease: [0.25, 0.1, 0.25, 1] }}
-                  className="glass-border group rounded-3xl cursor-default flex flex-col justify-between min-h-[220px] relative overflow-hidden"
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+                  style={{ y, minHeight: i === 0 ? '260px' : '220px' }}
+                  className="glass-border-img relative rounded-3xl overflow-hidden flex-1"
                 >
-                  {/* Background photo */}
                   <Image
                     src={s.img}
-                    alt=""
+                    alt={s.label}
                     fill
-                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-                    aria-hidden
+                    className="object-cover hover:scale-105 transition-transform duration-700 ease-in-out"
                   />
-                  {/* Dark gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10 group-hover:from-black/75 transition-all duration-500" />
-
-                  {/* Icon top-right */}
-                  <div className="relative z-10 self-end m-4 w-8 h-8 rounded-xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                    <Icon size={15} className="text-white" />
-                  </div>
-
-                  {/* Name bottom */}
-                  <div className="relative z-10 p-4 pt-0">
-                    <h3 className="font-serif text-[13px] font-semibold text-white leading-snug mb-1">{s.name}</h3>
-                    <p className="text-[11px] text-white/65 leading-relaxed">{s.desc}</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
+                    <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 py-1.5 text-white text-[11px] font-semibold tracking-wider uppercase">
+                      {s.label}
+                    </span>
+                    <span className="w-7 h-7 rounded-full bg-rose-gold flex items-center justify-center flex-shrink-0">
+                      <Icon size={13} className="text-white" />
+                    </span>
                   </div>
                 </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* CTA */}

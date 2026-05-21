@@ -1,30 +1,30 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FileText, DollarSign, CheckCircle, Clock, Calendar, CreditCard } from 'lucide-react'
+import { FileText, Cake, CheckCircle, Clock, Sparkles, CreditCard } from 'lucide-react'
 
 const steps = [
   {
     icon: FileText,
     step: '01',
-    title: 'Fill Out Our Quote Form',
-    body: 'Choose your occasion, size, flavour, and add-ons. Takes less than 2 minutes.',
+    title: 'Fill Out the Cake Order Form',
+    body: 'Tell us about your dream cake — flavour, design, occasion, and servings. Takes less than 2 minutes.',
     accent: Clock,
     accentLabel: '< 2 min',
   },
   {
-    icon: DollarSign,
+    icon: Cake,
     step: '02',
-    title: 'Receive Your Custom Quote',
-    body: 'Get your personalised quote within 48 hours — no back and forth.',
-    accent: Calendar,
-    accentLabel: 'Within 48 hrs',
+    title: 'Customize Your Cake',
+    body: 'Our baker reviews your order and reaches out to finalize every detail — design, colours, and any special touches.',
+    accent: Sparkles,
+    accentLabel: 'Personalized',
   },
   {
     icon: CheckCircle,
     step: '03',
-    title: 'Approve & Pay Your Deposit',
-    body: 'Confirm your order with a 50% deposit via e-transfer to lock in your date.',
+    title: 'Confirm & Lock In Your Date',
+    body: "Once your cake is finalized, you'll receive a payment link for your 50% deposit to secure your order.",
     accent: CreditCard,
     accentLabel: '50% deposit',
   },
@@ -125,16 +125,12 @@ export default function HowItWorks() {
                     >
                       <Icon size={28} className="text-rose-gold" />
                     </motion.div>
-                    {/* Step number badge */}
-                    <span className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-rose-gold flex items-center justify-center text-white text-[11px] font-bold font-serif shadow-md">
-                      {i + 1}
-                    </span>
                   </div>
 
                   {/* Content card */}
                   <div className="glass-border warm-card rounded-3xl p-6 w-full relative overflow-hidden">
                     {/* Ghost step number */}
-                    <span className="absolute bottom-3 right-4 font-serif text-6xl font-bold text-amber-glow/20 leading-none select-none">
+                    <span className="absolute bottom-3 right-4 font-serif text-6xl font-bold text-[#A67C52]/55 leading-none select-none">
                       {s.step}
                     </span>
 
@@ -165,7 +161,7 @@ export default function HowItWorks() {
             href="#order-form"
             className="btn-glow btn-amber-glow bg-rose-gold text-white text-sm font-semibold px-10 py-4 rounded-full hover:bg-opacity-90 transition-all duration-500 ease-in-out"
           >
-            Get My Custom Quote
+            Order My Cake
           </a>
         </motion.div>
       </div>

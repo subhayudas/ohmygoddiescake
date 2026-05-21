@@ -1,7 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Star } from 'lucide-react'
 import Image from 'next/image'
 
@@ -31,13 +30,6 @@ const starSizes = [14, 16, 18, 16, 14]
 const reviewMarqueeText = "★★★★★  5-Star Reviews  ·  Calgary  ·  O' My Goodies  ·  "
 
 export default function Reviews() {
-  const founderRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress: founderScroll } = useScroll({
-    target: founderRef,
-    offset: ['start end', 'end start'],
-  })
-  const founderTextY = useTransform(founderScroll, [0, 1], ['0%', '-3%'])
-
   return (
     <section id="reviews" className="section-padding section-ambient overflow-hidden relative" style={{ backgroundImage: 'url(/Celebration Wedding.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="absolute inset-0 bg-amber-muted/88 z-0" />
@@ -165,35 +157,6 @@ export default function Reviews() {
           ))}
         </motion.div>
 
-        {/* Founder quote — full-bleed strip with parallax text */}
-        <motion.div
-          ref={founderRef}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-          className="-mx-6 md:-mx-12 lg:-mx-24 px-8 md:px-16 lg:px-24 py-14 md:py-18 text-center"
-          style={{
-            background: 'linear-gradient(135deg, #C9956A 0%, #D4845A 55%, #B8855A 100%)',
-            boxShadow: '0 0 80px rgba(245,158,66,0.2)',
-          }}
-        >
-          <div className="max-w-3xl mx-auto">
-            <motion.p
-              style={{ y: founderTextY }}
-              className="font-serif text-xl md:text-2xl lg:text-3xl italic leading-relaxed text-white"
-            >
-              &ldquo;My clients are consistently surprised that the cake tastes even better than it looks — and they love that their cake becomes the focal point of the event. Something guests talk about, photograph, and remember.&rdquo;
-            </motion.p>
-
-            <div className="mt-8 flex items-center justify-center gap-3">
-              <div className="h-px w-8 bg-white/40" />
-              <p className="text-white/75 text-sm font-semibold">Onyinye, Founder</p>
-              <div className="h-px w-8 bg-white/40" />
-            </div>
-          </div>
-        </motion.div>
-
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -206,7 +169,7 @@ export default function Reviews() {
             href="#order-form"
             className="btn-glow btn-amber-glow bg-rose-gold text-white text-sm font-semibold px-10 py-4 rounded-full hover:bg-opacity-90 transition-all duration-500 ease-in-out"
           >
-            Get My Custom Quote
+            Order My Cake
           </a>
         </motion.div>
       </div>
