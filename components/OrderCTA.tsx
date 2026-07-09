@@ -209,17 +209,29 @@ const CORPORATE_PRICE_PER_SERVING = 9
 const CORPORATE_MIN_SERVINGS = 30
 
 /**
+ * Per-serving rate applied to servings that exceed the largest standard
+ * BIRTHDAY_PRICING tier, so the estimate keeps climbing for big cakes instead
+ * of flatlining at the top tier price.
+ */
+const BIRTHDAY_OVERFLOW_PER_SERVING = 7
+
+/**
  * Maps a requested servings count to the price of the smallest standard cake
- * (from BIRTHDAY_PRICING) whose serving range covers it. Falls back to the
- * largest tier when the request exceeds every range. Used for Birthday /
- * Anniversary / Baby Shower / Other occasions, which no longer pick a size.
+ * (from BIRTHDAY_PRICING) whose serving range covers it. When the request
+ * exceeds every standard tier, the top-tier price is used as a base and each
+ * additional serving beyond that tier adds BIRTHDAY_OVERFLOW_PER_SERVING, so
+ * the quote keeps increasing with size. Used for Birthday / Anniversary /
+ * Baby Shower / Other occasions, which no longer pick a size.
  */
 function nearestBirthdayPrice(servings: number): number {
   for (const row of BIRTHDAY_PRICING) {
     const upper = parseInt(row.servings.split('–')[1] ?? row.servings, 10) || 0
     if (upper >= servings) return row.price
   }
-  return BIRTHDAY_PRICING[BIRTHDAY_PRICING.length - 1].price
+  const topTier = BIRTHDAY_PRICING[BIRTHDAY_PRICING.length - 1]
+  const topUpper = parseInt(topTier.servings.split('–')[1] ?? topTier.servings, 10) || 0
+  const extraServings = Math.max(0, servings - topUpper)
+  return topTier.price + extraServings * BIRTHDAY_OVERFLOW_PER_SERVING
 }
 
 type OrderFormValues = {
