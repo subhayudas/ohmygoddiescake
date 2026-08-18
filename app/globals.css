@@ -199,6 +199,52 @@ body {
   mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
 }
 
+/* ─── Infinite portfolio marquee ────────────────────────────────────────── */
+@keyframes gallery-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.gallery-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: gallery-marquee 42s linear infinite;
+  will-change: transform;
+}
+
+.gallery-marquee-set {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.gallery-marquee-item {
+  flex: 0 0 clamp(13rem, 24vw, 20rem);
+}
+
+.gallery-marquee:hover .gallery-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-marquee {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+    scrollbar-width: thin;
+  }
+
+  .gallery-marquee-track {
+    animation: none;
+    will-change: auto;
+  }
+
+  .gallery-marquee-set-duplicate {
+    display: none;
+  }
+}
+
 /* ─── Footer animated gradient border ───────────────────────────────────── */
 @keyframes gradient-shift {
   0%   { background-position: 0% 50%; }

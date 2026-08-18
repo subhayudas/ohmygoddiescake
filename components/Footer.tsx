@@ -1,7 +1,7 @@
 import { Instagram, Phone, Mail, MapPin, ArrowRight } from 'lucide-react'
 
 const navLinks = [
-  { label: 'Gallery', href: '#services' },
+  { label: 'Gallery', href: '#gallery' },
   { label: 'Process', href: '#process' },
   { label: 'Reviews', href: '#reviews' },
   { label: 'Quote form', href: '#order-form' },

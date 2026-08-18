@@ -41,6 +41,45 @@ const starSizes = [14, 16, 18, 16, 14]
 
 const reviewMarqueeText = "★★★★★  5-Star Reviews  ·  Calgary  ·  Ony's Boutique  ·  "
 
+const portfolioPhotos = [
+  {
+    src: '/WhatsApp Image.jpeg',
+    alt: 'Just Married sheet cake decorated with white roses and ruffled buttercream',
+  },
+  {
+    src: '/WhatsApp Image 1.jpeg',
+    alt: 'Three-tier white wedding cake with vintage piped buttercream details',
+  },
+  {
+    src: '/WhatsApp Image 2026-08-10 at 2.47.06 PM.jpeg',
+    alt: 'Three-tier pearl wedding cake decorated with white roses',
+  },
+  {
+    src: '/5B99DEE4-E800-4DF2-B996-E194343F3627.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+  {
+    src: '/13C93E34-9AE7-4229-860B-5C30D64A3501.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+  {
+    src: '/8B0413F2-95B7-4B1C-AA81-F4316D8E16DC.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+  {
+    src: '/F8FF9757-50F0-4FF1-B6C5-EB0B30785CB4.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+  {
+    src: '/9E94165E-DB30-4B8E-A797-5E58FB3C7D0E.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+  {
+    src: '/7D294E86-802D-4F67-B12C-E32BD7B29B65.png',
+    alt: "Custom cake from Ony's Boutique gallery",
+  },
+] as const
+
 export default function Reviews() {
   return (
     <section id="reviews" className="section-padding section-ambient overflow-hidden relative" style={{ backgroundImage: 'url(/Celebration Wedding.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -134,39 +173,40 @@ export default function Reviews() {
           ))}
         </div>
 
-        {/* Portfolio photo grid */}
+        {/* Infinite portfolio marquee */}
         <motion.div
+          id="gallery"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-          className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-10"
+          className="gallery-marquee marquee-wrap -mx-6 md:-mx-12 lg:-mx-24 mb-10 scroll-mt-28"
+          aria-label="Cake gallery"
         >
-          {[
-            '/5B99DEE4-E800-4DF2-B996-E194343F3627.png',
-            '/13C93E34-9AE7-4229-860B-5C30D64A3501.png',
-            '/8B0413F2-95B7-4B1C-AA81-F4316D8E16DC.png',
-            '/F8FF9757-50F0-4FF1-B6C5-EB0B30785CB4.png',
-            '/9E94165E-DB30-4B8E-A797-5E58FB3C7D0E.png',
-            '/7D294E86-802D-4F67-B12C-E32BD7B29B65.png',
-          ].map((src, i) => (
-            <motion.div
-              key={src}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.07, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative aspect-square rounded-2xl overflow-hidden glass-border-img"
-            >
-              <Image
-                src={src}
-                alt="Cake gallery"
-                fill
-                className="object-cover hover:scale-110 transition-transform duration-700 ease-in-out"
-                sizes="(max-width: 768px) 33vw, 16vw"
-              />
-            </motion.div>
-          ))}
+          <div className="gallery-marquee-track py-2">
+            {[0, 1].map((setIndex) => (
+              <div
+                key={setIndex}
+                className={`gallery-marquee-set ${setIndex === 1 ? 'gallery-marquee-set-duplicate' : ''}`}
+                aria-hidden={setIndex === 1 ? true : undefined}
+              >
+                {portfolioPhotos.map(({ src, alt }) => (
+                  <div
+                    key={`${setIndex}-${src}`}
+                    className="gallery-marquee-item relative aspect-[4/5] rounded-2xl overflow-hidden glass-border-img"
+                  >
+                    <Image
+                      src={src}
+                      alt={setIndex === 0 ? alt : ''}
+                      fill
+                      className="object-cover hover:scale-110 transition-transform duration-700 ease-in-out"
+                      sizes="(max-width: 768px) 208px, 320px"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* CTA */}

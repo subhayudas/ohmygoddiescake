@@ -5,7 +5,7 @@ import { Menu, X } from 'lucide-react'
 import Image from 'next/image'
 
 const items = [
-  { label: 'Gallery', href: '#services' },
+  { label: 'Gallery', href: '#gallery' },
   { label: 'Process', href: '#process' },
   { label: 'Reviews', href: '#reviews' },
   { label: 'Our Story', href: '#about' },
