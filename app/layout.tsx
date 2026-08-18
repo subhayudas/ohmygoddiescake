@@ -28,7 +28,14 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 })
 
+// Vercel injects VERCEL_PROJECT_PRODUCTION_URL with the project's production domain,
+// so the icon and Open Graph URLs resolve absolutely without hardcoding a host here.
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : 'http://localhost:3000'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Ony's Boutique Custom Cakes | Calgary Custom Cakes",
   description:
     "Luxury custom cakes in Calgary, made with elevated design and exceptional taste. Wedding cakes, birthday cakes, and celebration cakes crafted to make every moment unforgettable.",

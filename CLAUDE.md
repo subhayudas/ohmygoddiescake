@@ -100,7 +100,10 @@ be created at the top level or env vars won't be set yet. Next.js API routes are
 ```
 ohmygoddiescake_work/
   app/
-    layout.tsx            # Root layout - fonts, <html>, metadata, gtag + Microsoft Clarity scripts, ScrollProgressBar, grain overlay
+    layout.tsx            # Root layout - fonts, <html>, metadata (incl. metadataBase), gtag + Microsoft Clarity scripts, ScrollProgressBar, grain overlay
+    icon.png              # Favicon (32px OB mark) - Next.js file-based metadata, auto-wired
+    apple-icon.png        # 180px apple-touch-icon on brand cream - auto-wired
+    opengraph-image.jpg   # 1200x630 social share card - auto-wired
     page.tsx              # Main page - imports & orders the rendered section components
     globals.css           # All global utilities, animations, grain overlay, marquee keyframes
     api/
@@ -139,7 +142,10 @@ ohmygoddiescake_work/
     test-sms.ts              # Isolated SMS send test
     check-bookings.ts        # Debug: dump booking profile + service variation + team member profiles
   public/
-    logo.svg
+    logo.jpg              # Master brand logo as supplied (1536x1024, cream background)
+    logo-mark.png         # 512px square OB mark, transparent - navbar well + icon source
+    logo-full.png         # Full lockup (mark + wordmark), transparent - light surfaces
+    logo-full-light.png   # Cream-inked lockup, transparent - dark surfaces (Footer)
     2165958_Ceremony_Wedding_1920x1080.mp4   # Hero video
     Startinglogorevealanimation.mp4
     Celebration_*.png     # Birthday, Wedding, Corporate, Baby Shower, Anniversary, Other
@@ -310,6 +316,11 @@ All keyframes live in `globals.css`, registered in `tailwind.config.js`:
 - **Tailwind-first styling.** Avoid raw CSS unless it must be a keyframe or complex selector — put those in `globals.css`.
 - **SectionReveal wrapper** — wrap any new full-width section with `<SectionReveal>` for consistent scroll-reveal behavior.
 - **Images go in `/public`** and are referenced with the Next.js `<Image>` component for optimization.
+- **One logo, three cuts.** `public/logo.jpg` is the master supplied by the client; everything on the
+  site uses a derived transparent PNG — `logo-mark.png` (square mark) on small/light surfaces,
+  `logo-full.png` (full lockup) on light surfaces, `logo-full-light.png` (cream ink) on dark ones.
+  Never render `logo.jpg` directly: its cream `#FDF8F4` background shows as a box against the
+  `#F3EDE4` page surface. Regenerate the cuts from the master rather than hand-editing them.
 - **Single-page app** — there are no sub-routes. Do not add `app/` subdirectories unless explicitly requested.
 
 ---
@@ -341,6 +352,12 @@ This file is the codebase context every Claude session starts from, so it must s
 ---
 
 ## Last Updated
+
+**2026-08-18** — Replaced the placeholder `logo.svg` (now deleted) with the real Ony's Boutique
+brand logo. Added `public/logo.jpg` (master) plus three transparent derivatives, pointed the Navbar
+well at `logo-mark.png` and the Footer brand at `logo-full-light.png`, and added file-based
+`app/icon.png`, `app/apple-icon.png`, and `app/opengraph-image.jpg`. Set `metadataBase` in
+`layout.tsx` from `VERCEL_PROJECT_PRODUCTION_URL` so icon/OG URLs resolve absolutely in production.
 
 **2026-06-14** — Added the Microsoft Clarity analytics snippet (project `x5m78bkkkd`) to
 `app/layout.tsx` via `next/script` (`afterInteractive`), alongside the existing gtag; updated the

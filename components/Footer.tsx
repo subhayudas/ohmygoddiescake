@@ -1,4 +1,5 @@
 import { Instagram, Phone, Mail, MapPin, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
 const navLinks = [
   { label: 'Gallery', href: '#gallery' },
@@ -40,7 +41,13 @@ export default function Footer() {
               style={{ background: 'radial-gradient(ellipse at center, rgba(245,158,66,0.12) 0%, transparent 70%)' }}
               aria-hidden
             />
-            <p className="font-serif text-2xl text-white mb-3 relative">Ony&apos;s Boutique</p>
+            <Image
+              src="/logo-full-light.png"
+              alt="Ony's Boutique Cakes"
+              width={1086}
+              height={642}
+              className="relative w-48 h-auto mb-4"
+            />
             <p className="text-white/40 text-sm leading-relaxed max-w-xs">
               Luxury custom cakes in Downtown Calgary. Elevated design, exceptional taste — made for your most important moments.
             </p>

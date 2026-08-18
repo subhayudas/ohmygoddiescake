@@ -32,7 +32,7 @@ export default function Navbar() {
           {/* Logo in inset well */}
           <a href="#top" className="flex items-center gap-3 shrink-0 group">
             <div className="w-11 h-11 rounded-clay-pill bg-surface shadow-neu-inset-deep flex items-center justify-center overflow-hidden">
-              <Image src="/logo.svg" alt="Ony's Boutique" width={28} height={28} className="opacity-90 group-hover:scale-110 transition-transform duration-300" />
+              <Image src="/logo-mark.png" alt="Ony's Boutique" width={32} height={32} priority className="group-hover:scale-110 transition-transform duration-300" />
             </div>
             <span className="hidden sm:block font-display text-base md:text-lg leading-none tracking-tight text-ink">
               Ony&apos;s Boutique
