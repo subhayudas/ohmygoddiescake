@@ -131,6 +131,7 @@ ohmygoddiescake_work/
   lib/
     square.ts             # Square client (lazy) + OrderPayload type + booking/customer helpers
     sms.ts                # Twilio client (lazy) + notifyBakery() + buildSmsText()
+    pricing.ts            # Shared pricing rules — MINIMUM_ORDER_TOTAL. Client-safe (no env/secrets)
   scripts/
     setup-square.ts          # One-time: create "Custom Cake Order" service in Square Catalog
     fix-service-type.ts      # One-time: set productType=APPOINTMENTS_SERVICE (already run)
@@ -210,13 +211,18 @@ as the named function `OrderForm()`. `TOTAL_STEPS = 5`.
 - `submitError` state shows an inline error if the API call fails.
 - `submitted: true` triggers the success confirmation screen.
 - Dynamic pricing preview (`estimatedTotal`) updates as the user selects options.
+- **Minimum order:** `MINIMUM_ORDER_TOTAL` ($130, from `lib/pricing.ts`) gates the wizard. Step 3's
+  Next button and step 5's Submit button are both disabled while `orderTotal < MINIMUM_ORDER_TOTAL`,
+  each with an inline note showing the shortfall. Step 3 is the last step where the total can still
+  change, but step 5 is gated too because the step tabs let a user edit back down below the minimum.
 
 ---
 
 ## `app/api/book/route.ts` — API Route
 
 `POST /api/book`. Parses JSON into `OrderPayload`; rejects with 400 if `name`, `email`, or
-`pickupDate` is missing. Then runs three operations in sequence:
+`pickupDate` is missing, or if `estimatedTotal` is absent/non-numeric/below `MINIMUM_ORDER_TOTAL`
+(the server-side half of the $130 minimum). Then runs three operations in sequence:
 
 1. `upsertCustomer(order)` — searches Square by email; creates if not found
 2. `createBooking(customerId, order, note)` — creates Square Appointment at the chosen pickup slot
@@ -259,6 +265,14 @@ submissions don't create two customer records.
 |---|---|
 | `notifyBakery(body)` | Sends SMS via Twilio to `BAKERY_PHONE_NUMBER` (lazy client init) |
 | `buildSmsText(order)` | Builds a compact order summary string (name, phone, date, fulfillment, occasion, cake, add-ons, `estimatedTotal`) |
+
+---
+
+## `lib/pricing.ts` — Key Exports
+
+| Export | Description |
+|---|---|
+| `MINIMUM_ORDER_TOTAL` | `130` — smallest estimated total (CAD) the bakery accepts. Enforced in `OrderCTA.tsx` (steps 3 and 5) and in `/api/book`. Client-safe to import. |
 
 ---
 
@@ -352,6 +366,12 @@ This file is the codebase context every Claude session starts from, so it must s
 ---
 
 ## Last Updated
+
+**2026-08-18** — Added a $130 minimum order. New `lib/pricing.ts` holds the single
+`MINIMUM_ORDER_TOTAL` constant (client-safe, so both the wizard and the API import the same
+number). `OrderCTA.tsx` disables the step-3 Next and step-5 Submit buttons below the minimum with
+inline shortfall notes; `/api/book` rejects any payload whose `estimatedTotal` is missing or under
+it with a 400.
 
 **2026-08-18** — Replaced the placeholder `logo.svg` (now deleted) with the real Ony's Boutique
 brand logo. Added `public/logo.jpg` (master) plus three transparent derivatives, pointed the Navbar

@@ -6,6 +6,7 @@ import {
   upsertCustomer,
 } from '@/lib/square'
 import { buildSmsText, notifyBakery } from '@/lib/sms'
+import { MINIMUM_ORDER_TOTAL } from '@/lib/pricing'
 
 export async function POST(req: NextRequest) {
   let order: OrderPayload
@@ -18,6 +19,17 @@ export async function POST(req: NextRequest) {
 
   if (!order.name || !order.email || !order.pickupDate) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+  }
+
+  if (
+    typeof order.estimatedTotal !== 'number' ||
+    !Number.isFinite(order.estimatedTotal) ||
+    order.estimatedTotal < MINIMUM_ORDER_TOTAL
+  ) {
+    return NextResponse.json(
+      { error: `Minimum order total is $${MINIMUM_ORDER_TOTAL}` },
+      { status: 400 },
+    )
   }
 
   try {

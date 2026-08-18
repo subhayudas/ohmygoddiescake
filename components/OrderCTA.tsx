@@ -17,6 +17,7 @@ import {
   Check,
 } from 'lucide-react'
 import Image from 'next/image'
+import { MINIMUM_ORDER_TOTAL } from '@/lib/pricing'
 
 const TOTAL_STEPS = 5
 
@@ -469,6 +470,9 @@ export function OrderForm() {
 
   const orderTotal = (cakeBase ?? 0) + addonTotal + fondantSurcharge
 
+  const meetsMinimumOrder = orderTotal >= MINIMUM_ORDER_TOTAL
+  const minimumShortfall = Math.max(0, MINIMUM_ORDER_TOTAL - orderTotal)
+
   const contactSummaryRows = useMemo(() => {
     const rows: { key: string; label: string; value: string }[] = []
 
@@ -582,11 +586,12 @@ export function OrderForm() {
       case 2:
         return !!flavour && !!frosting
       case 3:
-        return true
+        return meetsMinimumOrder
       case 4:
         return !!pickupDate && minPickupStr !== '' && pickupDate >= minPickupStr && !!pickupTime
       case 5:
         return (
+          meetsMinimumOrder &&
           name.trim().length > 0 &&
           email.trim().length > 0 &&
           phone.trim().length > 0 &&
@@ -1576,6 +1581,16 @@ export function OrderForm() {
                         ${addonTotal}
                       </motion.span>
                     </div>
+
+                    {!meetsMinimumOrder && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-2 text-center text-xs font-semibold text-rose-gold"
+                      >
+                        Minimum order is ${MINIMUM_ORDER_TOTAL}. Your estimate is ${orderTotal} — add ${minimumShortfall} more to continue.
+                      </motion.p>
+                    )}
                   </motion.div>
                 )}
 
@@ -1791,6 +1806,11 @@ export function OrderForm() {
                 )}
                 {step === 5 && (
                   <div className="flex flex-col items-end gap-2">
+                    {!meetsMinimumOrder && (
+                      <p className="text-right text-xs font-semibold text-rose-gold">
+                        Minimum order is ${MINIMUM_ORDER_TOTAL} — add ${minimumShortfall} more to submit.
+                      </p>
+                    )}
                     {submitError && (
                       <p className="text-red-500 text-sm">{submitError}</p>
                     )}
