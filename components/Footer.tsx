@@ -99,11 +99,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:omygoodiesyyc@gmail.com"
+                  href="mailto:info@boutiquecakesbyony.com"
                   className="footer-link-animated flex items-center gap-3 text-sm text-white/40 hover:text-amber-glow transition-colors duration-400 ease-in-out group"
                 >
                   <Mail size={14} className="text-amber flex-shrink-0" />
-                  <span>omygoodiesyyc@gmail.com</span>
+                  <span>info@boutiquecakesbyony.com</span>
                 </a>
               </li>
             </ul>

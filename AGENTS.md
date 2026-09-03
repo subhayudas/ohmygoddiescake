@@ -354,6 +354,8 @@ This file is the codebase context every Codex session starts from, so it must st
 
 ## Last Updated
 
+**2026-09-03** — Updated the public bakery contact email in the footer, including its `mailto:` link, to `info@boutiquecakesbyony.com`.
+
 **2026-08-11** — Converted the Reviews portfolio grid into a seamless, endlessly moving image
 marquee with hover pause and a reduced-motion fallback; linked the Navbar and Footer Gallery items
 directly to the new `#gallery` anchor.
